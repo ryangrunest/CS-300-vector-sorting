@@ -1,0 +1,149 @@
+// Include necessary headers
+Include <iostream>
+Include <vector>
+Include <string>
+Include <chrono>
+Include "CSVparser.hpp"
+
+Using namespace std;
+Using namespace std::chrono;
+
+// Define Bid struct with a member 'title'
+Struct Bid {
+    string title;
+    // other members...
+};
+
+// Function prototypes
+Function selectionSort(vector<Bid>& bids)
+Function quickSort(vector<Bid>& bids, int begin, int end)
+Function partition(vector<Bid>& bids, int begin, int end)
+Function loadBids(string csvPath)
+
+// Main function
+Function main(int argc, char* argv[]) {
+    // Process command line arguments
+    Declare string csvPath
+    Switch on argc {
+        Case 2:
+            Set csvPath to argv[1]
+            Break
+        Default:
+            Set csvPath to "eBid_Monthly_Sales.csv"
+    }
+
+    // Define a vector to hold all the bids
+    Declare vector<Bid> bids
+
+    // Define a timer variable
+    Declare clock_t ticks
+
+    // Menu loop
+    Declare int choice = 0
+    While choice is not 9 {
+        Print menu options
+        Read choice from user
+
+        Switch on choice {
+            Case 1:
+                // Load bids from CSV file
+                Set bids to loadBids(csvPath)
+                Print "Bids loaded"
+                Break
+            Case 2:
+                // Display all bids
+                For each bid in bids {
+                    Print bid.title
+                }
+                Break
+            Case 3:
+                // Selection sort all bids
+                Start timer
+                Call selectionSort(bids)
+                Stop timer
+                Print "Selection sort took X milliseconds"
+                Break
+            Case 4:
+                // Quick sort all bids
+                Start timer
+                Call quickSort(bids, 0, bids.size() - 1)
+                Stop timer
+                Print "Quick sort took X milliseconds"
+                Break
+            Case 9:
+                Print "Goodbye."
+                Break
+            Default:
+                Print "Invalid choice."
+        }
+    }
+    Return 0
+}
+
+// Function to load bids from CSV file
+Function loadBids(string csvPath) {
+    Declare vector<Bid> bids
+
+    // Use CSV parser to read the CSV file
+    Declare csv::Parser file = csv::Parser(csvPath)
+
+    // Loop through rows in CSV file
+    For each row in file {
+        Declare Bid bid
+        Set bid.title to file[row]["title"]
+        // Set other members of bid as needed
+
+        Add bid to bids
+    }
+
+    Return bids
+}
+
+// Function to perform selection sort on bids
+Function selectionSort(vector<Bid>& bids) {
+    Declare size_t n = bids.size()
+    For pos from 0 to n - 1 {
+        Declare size_t min = pos
+        For j from pos + 1 to n {
+            If bids[j].title < bids[min].title {
+                Set min to j
+            }
+        }
+        If min is not pos {
+            Swap bids[pos] and bids[min]
+        }
+    }
+}
+
+// Function to perform quick sort on bids
+Function quickSort(vector<Bid>& bids, int begin, int end) {
+    If begin >= end {
+        Return
+    }
+    Declare int mid = partition(bids, begin, end)
+    Call quickSort(bids, begin, mid)
+    Call quickSort(bids, mid + 1, end)
+}
+
+// Function to partition bids
+Function partition(vector<Bid>& bids, int begin, int end) {
+    Declare int low = begin
+    Declare int high = end
+    Declare int middleIndex = begin + (end - begin) / 2
+    Declare string pivot = bids[middleIndex].title
+
+    While true {
+        While bids[low].title < pivot {
+            Increment low
+        }
+        While pivot < bids[high].title {
+            Decrement high
+        }
+        If low >= high {
+            Return high
+        }
+        Swap bids[low] and bids[high]
+        Increment low
+        Decrement high
+    }
+}
